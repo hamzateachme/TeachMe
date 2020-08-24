@@ -1,47 +1,11 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
-import * as Yup from 'yup';
-import {RSA, RSAKeychain} from 'react-native-rsa-native';
-import jwtDecode from 'jwt-decode';
 
 import colors from '../config/colors';
-import AppForm from '../components/forms/AppForm';
-import AppFormField from '../components/forms/AppFormField';
 import AppButton from '../components/AppButton';
-import SubmitButton from '../components/forms/SubmitButton';
 import Screen from '../components/Screen';
-import login from '../api/login';
-import profileApi from '../api/profilesApi';
-import AppActivityIndicator from '../components/AppActivityIndicator';
-import vw from '../config/vw';
-import vh from '../config/vh';
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
-});
 
 function WelcomeScreen({navigation}) {
-  //let keyTag = 'com.teachme.private';
-  const demoUser = {
-    _id: 100,
-    name: 'Hamza',
-    surname: 'Hussain',
-    phone: 5414946319,
-    profile_picture: '',
-    status: 'bronze',
-    rating: 3,
-  };
-  async function getServerKey() {
-    var response = await login.getSecureKey();
-    if (response.ok) {
-      encryption.setServerKey(response.data.key);
-      return response.data.key;
-    } else {
-      return null;
-    }
-  }
-
   async function signup() {
     navigation.navigate('Register');
   }

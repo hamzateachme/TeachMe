@@ -1,35 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  UIManager,
-  ListView,
-} from 'react-native';
-import RegisterScreen from './app/screens/RegisterScreen';
-import WelcomeScreen from './app/screens/WelcomeScreen';
-import TeacherCard from './app/components/TeacherCard';
-import ChatItem from './app/components/ChatItem';
-import ChatHistory from './app/screens/ChatHistory';
-import colors from './app/config/colors';
-import AppSwitch from './app/components/AppSwitch';
+import {StyleSheet, View, Platform, UIManager} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
+import io from 'socket.io-client';
+import OneSignal from 'react-native-onesignal';
+
+import colors from './app/config/colors';
 import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
-import GoalsCard from './app/components/GoalsCard';
-import ProfileInfo from './app/components/ProfileInfo';
-import TeacherHome from './app/screens/TeacherHome';
+import authStorage from './app/auth/storage';
 import AppNavigator from './app/navigation/AppNavigator';
-import AccountCard from './app/components/AccountCard';
-import ClassSelectionScreen from './app/screens/ClassSelectionScreen';
-import StartClassScreen from './app/screens/StartClassScreen';
-//import generate from './app/rsa';
-import {create} from 'apisauce';
-import {RSA, RSAKeychain} from 'react-native-rsa-native';
-
-import login from './app/api/login';
-import ChatScreen from './app/screens/ChatScreen';
+import {
+  setInitialState,
+  SocketContextProvider,
+} from './app/hooks/SocketContext';
+import {UserProvider} from './app/hooks/UserContext';
+import {navigationRef} from './app/navigation/rootNavigation';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -37,47 +22,50 @@ if (Platform.OS === 'android') {
   }
 }
 
-/** 
-RSA.generateKeys(2048) // set key size
-  .then((keys) => {
-    console.log('1024 public:', keys.public); // the private key
-    api.get('/teachme/').then((response) => {
-      if (!response.ok) {
-        console.log(response.problem);
-      } else {
-        RSA.encrypt('hamza.hussain97@live.com', response.data.key).then(
-          (encodedMessage) => {
-            handleE(encodedMessage);
-          },
-        );
-        RSA.encrypt('hamza123', response.data.key).then((encodedMessage) => {
-          handleP(encodedMessage);
-        });
-        api.post('/teachme/login', {
-          email: window.encodedE,
-          password: window.encodedP,
-        });
-      }
-    });
-  });*/
-
 export default function App() {
-  /**[serverKey, setServerKey] = useState();
+  [user, setUser] = useState();
+  [loading, setLoading] = useState(true);
+
+  async function restoreUser() {
+    const user = await authStorage.getUser();
+    console.log(user);
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+    setInitialState(
+      io('http://192.168.18.2:3002', {
+        query: {token: user.token, classes: user.classes},
+      }),
+    );
+    setUser(user);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    getServerKey();
+    restoreUser();
+    OneSignal.init('8a316945-1973-4a08-9dab-7d0e162b15bb', {
+      kOSSettingsKeyAutoPrompt: false,
+      kOSSettingsKeyInAppLaunchURL: false,
+      kOSSettingsKeyInFocusDisplayOption: 2,
+    });
+    OneSignal.inFocusDisplaying(1);
   }, []);
 
-  async function getServerKey() {
-    var response = await login.getSecureKey();
-    if (response.ok) {
-      setServerKey(response.data.key);
-    }
-  }*/
   return (
-    //<StartClassScreen />
-    <NavigationContainer theme={navigationTheme}>
-      <AuthNavigator />
-    </NavigationContainer>
+    <UserProvider value={{user, setUser}}>
+      {loading ? (
+        <View
+          style={{width: '100%', height: '100%', backgroundColor: colors.black}}
+        />
+      ) : (
+        <SocketContextProvider>
+          <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+            {user ? <AppNavigator /> : <AuthNavigator />}
+          </NavigationContainer>
+        </SocketContextProvider>
+      )}
+    </UserProvider>
   );
 }
 

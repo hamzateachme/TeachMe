@@ -1,7 +1,5 @@
 import React, {useEffect} from 'react';
-//import ImagePicker from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   View,
@@ -47,21 +45,6 @@ function AppImagePicker({
       console.log(E);
     }
   }
-
-  /** 
-  function handleResponse(response){
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-         onChange(response.uri);
-      }
-  
-
-  async function pickImage() {
-        await ImagePicker.showImagePicker(handleResponse)
-  }*/
 
   return (
     <TouchableWithoutFeedback onPress={touchable ? pickImage : () => {}}>

@@ -1,38 +1,34 @@
 import React, {useState, useEffect, useContext} from 'react';
-
-import colors from '../config/colors';
 import {Text, StyleSheet, View, ScrollView} from 'react-native';
-import {useRoute} from '@react-navigation/native';
 
 import AppSwitch from '../components/AppSwitch';
 import AppButton from '../components/AppButton';
 import profileApi from '../api/profilesApi';
 import Screen from '../components/Screen';
+import colors from '../config/colors';
 import vh from '../config/vh';
 import vw from '../config/vw';
 import {SocketContext} from '../hooks/SocketContext';
+import UserContext from '../hooks/UserContext';
 
 function ClassSelectionScreen({navigation}) {
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [classes, setClasses] = useState([]);
-  const route = useRoute();
+  const {user, setUser} = useContext(UserContext);
   const {connect} = useContext(SocketContext);
   useEffect(() => {
     getClasses();
   }, []);
 
   async function getClasses() {
-    const response = await profileApi.getClasses(route.params.token);
+    const response = await profileApi.getClasses(user.token);
     setClasses(response.data);
   }
 
   async function onPress() {
-    const response = await profileApi.setClasses(
-      route.params.token,
-      selectedClasses,
-    );
-    connect({token: route.params.token, classes: route.params.classes});
-    navigation.navigate('AppNavigator', route.params);
+    const response = await profileApi.setClasses(user.token, selectedClasses);
+    connect({token: user.token, classes: selectedClasses});
+    setUser({...user, classes: selectedClasses});
   }
   function handleChange(id, switchEnabled) {
     var newSelections = [...selectedClasses];

@@ -1,5 +1,4 @@
 import servers from './apiServers';
-import ImgToBase64 from 'react-native-image-base64';
 
 function getSecureKey() {
   return servers.authenticationServer.get('/teachme/');

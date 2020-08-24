@@ -23,7 +23,7 @@ function TeacherHome() {
       <Screen>
         <ProfileInfo status={status} />
         <View style={{height: 2 * vh, backgroundColor: colors.primary}} />
-        <GoalsCard type={'TEACHER'} />
+        <GoalsCard />
         <AccountCard />
       </Screen>
     </ScrollView>

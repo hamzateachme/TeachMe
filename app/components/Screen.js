@@ -10,7 +10,7 @@ function Screen({style, children}) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5.5 * vh,
+    marginTop: 2 * vh,
     padding: 2 * vh,
     width: '100%',
     flex: 1,

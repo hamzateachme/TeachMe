@@ -1,15 +1,14 @@
-import React from "react";
-import { ImageBackground, StyleSheet, View, Text, Image } from "react-native";
-import StarRating from "react-native-star-rating";
-import colors from "../config/colors";
+import React from 'react';
+import {StyleSheet, View, Text, Image} from 'react-native';
+import StarRating from 'react-native-star-rating';
+import colors from '../config/colors';
 
 function TeacherCard(props) {
   return (
     <View style={styles.container}>
       <Image
         source={props.profile_picture}
-        style={styles.profile_picture}
-      ></Image>
+        style={styles.profile_picture}></Image>
       <Text style={styles.name}>{props.name}</Text>
       <Text style={styles.subjects}>{props.subjects}</Text>
       <StarRating
@@ -26,42 +25,42 @@ function TeacherCard(props) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     backgroundColor: colors.white,
     borderRadius: 20,
     paddingBottom: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
 
   profile_picture: {
-    width: "100%",
+    width: '100%',
     height: 150,
-    resizeMode: "stretch",
+    resizeMode: 'stretch',
   },
 
   name: {
-    width: "100%",
-    textAlignVertical: "center",
+    width: '100%',
+    textAlignVertical: 'center',
     fontSize: 25,
     paddingLeft: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.secondary,
   },
 
   subjects: {
-    width: "100%",
-    textAlignVertical: "center",
+    width: '100%',
+    textAlignVertical: 'center',
     fontSize: 10,
     paddingLeft: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.black,
   },
 
   star: {
-    width: "100%",
+    width: '100%',
     paddingTop: 10,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
 });
 

@@ -1,21 +1,19 @@
 import React, {useContext} from 'react';
-import {View, Image, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Image, Text, StyleSheet} from 'react-native';
 import StarRating from 'react-native-star-rating';
 
 import AppCircularProgress from '../components/AppCircularProgress';
 import colors from '../config/colors';
-import AppImagePicker from './AppImagePicker';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import UserContext from '../hooks/UserContext';
 import vh from '../config/vh';
 import vw from '../config/vw';
 
 function GoalsCard(props) {
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   let badge;
-  if (user.params.status === 'gold') {
+  if (user.status === 'gold') {
     badge = require('../assets/gold.jpg');
-  } else if (user.params.status === 'silver') {
+  } else if (user.status === 'silver') {
     badge = require('../assets/silver.jpg');
   } else {
     badge = require('../assets/bronze.jpg');
@@ -28,12 +26,12 @@ function GoalsCard(props) {
         <StarRating
           disable={false}
           maxStars={5}
-          rating={user.params.rating}
+          rating={user.rating}
           fullStarColor={colors.gold}
           starSize={8 * vw}
         />
         <Text>
-          {user.params.status.toUpperCase()} {props.type}
+          {user.status.toUpperCase()} {user.accountType.toUpperCase()}
         </Text>
       </View>
       <View style={styles.goals_container}>

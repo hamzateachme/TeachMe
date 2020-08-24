@@ -10,9 +10,6 @@ import SubmitButton from '../components/forms/SubmitButton';
 import colors from '../config/colors';
 import Screen from '../components/Screen';
 import UserContext from '../hooks/UserContext';
-import ProfileInfo from '../components/ProfileInfo';
-import vw from '../config/vw';
-import vh from '../config/vh';
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 const validationSchema = Yup.object().shape({
@@ -26,16 +23,16 @@ const validationSchema = Yup.object().shape({
 });
 
 function AccountScreen() {
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   return (
     <ScrollView>
       <Screen>
         <View style={styles.container}>
           <AppForm
             initialValues={{
-              profile_picture: user.params.profile_picture,
-              dateOfBirth: user.params.dataOfBirth,
-              phoneNumber: user.params.phoneNumber,
+              profile_picture: user.profile_picture,
+              dateOfBirth: user.dataOfBirth,
+              phoneNumber: user.phoneNumber,
               email: '',
               password: '',
             }}

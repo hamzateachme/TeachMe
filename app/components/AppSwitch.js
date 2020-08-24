@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Text, TextInput, View, StyleSheet} from 'react-native';
+import React from 'react';
+import {TextInput, View, StyleSheet} from 'react-native';
 import {Switch} from 'react-native';
+
 import colors from '../config/colors';
 import vh from '../config/vh';
 import vw from '../config/vw';

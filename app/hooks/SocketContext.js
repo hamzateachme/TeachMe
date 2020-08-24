@@ -7,15 +7,17 @@ const initialSocketState = {
   socket: {},
 };
 
+export function setInitialState(socket) {
+  initialSocketState.socket = socket;
+}
+
 const socketContextWrapper = (component) => ({
   ...initialSocketState,
   connect: (credentials) => {
-    console.log(credentials);
     query = credentials;
     initialSocketState.socket = io('http://192.168.18.2:3002', {
       query: query,
     });
-    initialSocketState.status = 'online';
     socketContextWrapper(component);
   },
   handleEvent: (event, fnc) => {
@@ -30,7 +32,6 @@ const socketContextWrapper = (component) => ({
 });
 
 export const SocketContext = React.createContext({});
-
 export class SocketContextProvider extends React.Component {
   state = {
     context: socketContextWrapper(this),

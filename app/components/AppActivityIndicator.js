@@ -1,6 +1,5 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
-import vh from '../config/vh';
 import vw from '../config/vw';
 import {View} from 'react-native';
 

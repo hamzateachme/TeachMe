@@ -8,11 +8,8 @@ import {
 } from 'react-native';
 
 import colors from '../config/colors';
-import {useRoute} from '@react-navigation/native';
-
-import {SocketContextProvider, SocketContext} from '../hooks/SocketContext';
+import {SocketContext} from '../hooks/SocketContext';
 import UserContext from '../hooks/UserContext';
-import AppSwitch from '../components/AppSwitch';
 import AppButton from '../components/AppButton';
 import profileApi from '../api/profilesApi';
 import Screen from '../components/Screen';
@@ -20,16 +17,16 @@ import vh from '../config/vh';
 import vw from '../config/vw';
 
 function StartClassScreen({navigation}) {
-  const user = React.useContext(UserContext);
+  const {user} = React.useContext(UserContext);
   const [classes, setClasses] = useState([]);
   const [connection, setConnection] = useState(false);
-  const {socket, handleEvent, emit} = React.useContext(SocketContext);
+  const {handleEvent, emit} = React.useContext(SocketContext);
   useEffect(() => {
     getClasses();
   }, []);
 
   async function getClasses() {
-    const response = await profileApi.getClasses(user.params.token);
+    const response = await profileApi.getClasses(user.token);
     if (response.ok) {
       setConnection(true);
       setClasses(response.data);
@@ -40,7 +37,7 @@ function StartClassScreen({navigation}) {
   }
 
   async function onPress(classId) {
-    emit('notify', {classId: classId, studentId: user.params._id});
+    emit('notify', {classId: classId, studentId: user._id});
     handleEvent('beginSession', function (msg) {
       console.log(msg.teacherId);
       navigation.navigate('Chats', {
@@ -49,17 +46,7 @@ function StartClassScreen({navigation}) {
       });
     });
   }
-  function handleChange(id, switchEnabled) {
-    var newSelections = [...selectedClasses];
-    if (switchEnabled) {
-      newSelections.push(id);
-    } else {
-      newSelections = newSelections.filter((item) => {
-        return item !== id;
-      });
-    }
-    setSelectedClasses(newSelections);
-  }
+
   return (
     <>
       {!connection && (

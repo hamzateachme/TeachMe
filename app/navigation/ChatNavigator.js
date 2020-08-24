@@ -1,34 +1,47 @@
 import React from 'react';
-import {View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import WelcomeScreen from '../screens/WelcomeScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import LoginScreen from '../screens/LoginScreen';
-import TeacherHome from '../screens/TeacherHome';
 import colors from '../config/colors';
-import {Screen} from '../components/Screen';
-import AppNavigator from '../navigation/AppNavigator';
 import vh from '../config/vh';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import ChatHistory from '../screens/ChatHistory';
 import ChatScreen from '../screens/ChatScreen';
-import {SocketContext} from '../hooks/SocketContext';
+import vw from '../config/vw';
+
 const Stack = createStackNavigator();
+
+function HeaderButton() {
+  const navigation = useNavigation();
+  return (
+    <TouchableWithoutFeedback
+      onPress={async (props) => {
+        navigation.navigate('History');
+      }}>
+      <MaterialCommunityIcons
+        name="logout"
+        size={4 * vh}
+        color={colors.secondary_variant}
+      />
+    </TouchableWithoutFeedback>
+  );
+}
 
 function ChatNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: {backgroundColor: colors.primary},
+        headerStyle: styles.headerStyle,
         headerTintColor: colors.secondary_variant,
         headerTransparent: true,
+        headerLeftContainerStyle: styles.headerLeftContainer,
+        headerLeft: () => <HeaderButton />,
       }}>
       <Stack.Screen
         name="History"
         component={ChatHistory}
-        options={{headerShown: false}}
+        options={{title: 'Chat History'}}
       />
       <Stack.Screen name="Chat" component={ChatScreen} />
     </Stack.Navigator>
@@ -36,8 +49,11 @@ function ChatNavigator() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
+  headerStyle: {
+    backgroundColor: colors.primary,
+  },
+  headerLeftContainer: {
+    paddingLeft: 5 * vw,
   },
 });
 

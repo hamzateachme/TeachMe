@@ -1,24 +1,13 @@
 import React, {useContext} from 'react';
-import {View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import WelcomeScreen from '../screens/WelcomeScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import LoginScreen from '../screens/LoginScreen';
 import TeacherHome from '../screens/TeacherHome';
 import StudentHome from '../screens/StudentHome';
 import colors from '../config/colors';
-import {Screen} from '../components/Screen';
-import AppNavigator from '../navigation/AppNavigator';
-import vh from '../config/vh';
-import {StackActions, useNavigation} from '@react-navigation/native';
-import ChatHistory from '../screens/ChatHistory';
-import ChatScreen from '../screens/ChatScreen';
 import StartClassScreen from '../screens/StartClassScreen';
-import {SocketContext} from '../hooks/SocketContext';
 import UserContext from '../hooks/UserContext';
-import vw from '../config/vw';
+
 const Stack = createStackNavigator();
 
 function HomeNavigator() {
@@ -26,15 +15,14 @@ function HomeNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: {backgroundColor: colors.primary},
+        headerStyle: styles.header,
         headerTintColor: colors.secondary_variant,
         headerTransparent: true,
+        headerShown: false,
       }}>
       <Stack.Screen
         name="Dashboard"
-        component={
-          user.params.accountType === 'Student' ? StudentHome : TeacherHome
-        }
+        component={user.accountType === 'Student' ? StudentHome : TeacherHome}
       />
       <Stack.Screen name="Class" component={StartClassScreen} />
     </Stack.Navigator>
@@ -42,8 +30,8 @@ function HomeNavigator() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
+  headerStyle: {
+    backgroundColor: colors.primary,
   },
 });
 

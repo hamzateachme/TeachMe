@@ -6,7 +6,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import colors from '../config/colors';
 import vw from '../config/vw';
 import vh from '../config/vh';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 function SwipeRightView(props) {
   return (

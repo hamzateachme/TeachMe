@@ -3,10 +3,8 @@ import {View, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import colors from '../config/colors';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {TouchableOpacity} from 'react-native';
 import vh from '../config/vh';
-import vw from '../config/vw';
 
 function HomeButton({onPress}) {
   return (

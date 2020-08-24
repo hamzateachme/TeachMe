@@ -1,25 +1,24 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 
 import colors from '../config/colors';
 import UserContext from '../hooks/UserContext';
 import vh from '../config/vh';
 import vw from '../config/vw';
-import {SocketContext} from '../hooks/SocketContext';
 
 function ProfileInfo(props) {
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   return (
     <View style={styles.container}>
       <Image
         source={
-          user.params.profile_picture
-            ? {uri: user.params.profile_picture}
+          user.profile_picture
+            ? {uri: user.profile_picture}
             : require('../assets/example_teacher.jpg')
         }
         style={styles.profile_picture}></Image>
       <View style={styles.text_container}>
-        <Text style={styles.name}>{user.params.name}</Text>
+        <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.email} numberOfLines={1} ellipsizeMode={'tail'}>
           {props.status}
         </Text>

@@ -5,9 +5,7 @@ import {useFormikContext} from 'formik';
 import ImagePickerField from './ImagePickerField';
 import ErrorComponent from './ErrorComponent';
 import AccountTypeSwitch from './AccountTypeSwitch';
-import AppImagePicker from '../AppImagePicker';
 
-import AppFormField from './AppFormField';
 function AccountTypeField({fieldName, ...otherProps}) {
   const {setFieldValue, errors, touched, values} = useFormikContext();
 

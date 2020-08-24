@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 import {SocketContext} from '../../hooks/SocketContext';
 import UserContext from '../../hooks/UserContext';
@@ -8,30 +9,30 @@ import colors from '../../config/colors';
 import vw from '../../config/vw';
 import vh from '../../config/vh';
 import CardButton from './CardButton';
-import {useNavigation} from '@react-navigation/native';
+import authStorage from '../../auth/storage';
+
 function AccountCard() {
-  const user = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
   const {emit} = useContext(SocketContext);
   const navigation = useNavigation();
 
   function walletPress() {
-    if (user.params.accountType === 'Teacher') {
+    if (user.accountType === 'Teacher') {
     } else {
     }
   }
 
   function teachPress() {
-    if (user.params.accountType === 'Teacher') {
-      emit('goOnline', {classes: user.params.classes});
+    if (user.accountType === 'Teacher') {
+      emit('goOnline', {classes: user.classes});
     } else {
       navigation.navigate('Class');
     }
   }
 
-  function historyPress() {
-    if (user.params.accountType === 'Teacher') {
-    } else {
-    }
+  function logoutPress() {
+    authStorage.removeUser();
+    setUser(null);
   }
 
   function helpPress() {}
@@ -51,14 +52,14 @@ function AccountCard() {
       <View style={styles.buttonsContainer}>
         <CardButton
           icon={'wallet'}
-          title={user.params.accountType === 'Teacher' ? 'Withdraw' : 'Deposit'}
+          title={user.accountType === 'Teacher' ? 'Withdraw' : 'Deposit'}
         />
         <CardButton
           icon={'teach'}
           onPress={teachPress}
-          title={user.params.accountType === 'Teacher' ? 'Teach' : 'Study'}
+          title={user.accountType === 'Teacher' ? 'Teach' : 'Study'}
         />
-        <CardButton icon={'history'} title={'History'} />
+        <CardButton icon={'logout'} onPress={logoutPress} title={'Logout'} />
         <CardButton icon={'help-box'} title={'Help'} />
       </View>
     </View>

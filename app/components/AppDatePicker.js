@@ -4,15 +4,10 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   StyleSheet,
-  Button,
-  DatePickerIOS,
 } from 'react-native';
-import {useFormikContext} from 'formik';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-import AppTextInput from './AppTextInput';
 import colors from '../config/colors';
 import vh from '../config/vh';
 import vw from '../config/vw';

@@ -4,7 +4,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import vh from '../../config/vh';
 import colors from '../../config/colors';
-import vw from '../../config/vw';
 
 function CardButton({icon, onPress, title}) {
   return (
@@ -15,7 +14,7 @@ function CardButton({icon, onPress, title}) {
           size={3 * vh}
           color={colors.white}
         />
-        <Text style={{color: colors.white, fontSize: 1.25 * vh}}>{title}</Text>
+        <Text style={styles.textStyle}>{title}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -30,6 +29,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+  },
+  textStyle: {
+    color: colors.white,
+    fontSize: 1.25 * vh,
   },
 });
 

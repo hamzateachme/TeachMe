@@ -1,20 +1,12 @@
-import React, {useState, useContext, useCallback, useEffect} from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-import ChatText from '../components/ChatText';
-import ListSeparator from '../components/ListSeparator';
 import UserContext from '../hooks/UserContext';
 import chatApi from '../api/chatApi';
-import {SocketContext} from '../hooks/SocketContext';
-import {
-  GiftedChat,
-  Bubble,
-  InputToolbar,
-  AccessoryBar,
-} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble, InputToolbar} from 'react-native-gifted-chat';
 import colors from '../config/colors';
-import io from 'socket.io-client';
+import vh from '../config/vh';
 
 class Chat extends React.Component {
   constructor(props) {
@@ -48,11 +40,6 @@ class Chat extends React.Component {
         response.data.messages.reverse(),
       ),
     }));
-    //this.state.messages = conversation;
-    //this.socket = io('http://192.168.18.2:3000');
-    //this.socket.handleEvent('chat message', (msg) => {
-    //  this.onReceive(msg);
-    //});
   }
 
   componentWillUnmount() {
@@ -80,7 +67,6 @@ class Chat extends React.Component {
         conversationId: this.conversationId,
         image: this.state.image,
       }));
-      //this.socket.emit('chat message', messagesToUpload[0]);
       emitFnc('chat message', messagesToUpload[0]);
       this.setState((previousState) => ({
         messages: GiftedChat.append(previousState.messages, messagesToUpload),
@@ -148,7 +134,7 @@ class Chat extends React.Component {
               messages={this.state.messages}
               onSend={(messages) => this.onSend(messages, this.emit)}
               user={{
-                _id: context.params._id,
+                _id: context.user._id,
               }}
               loadEarlier={true}
               infiniteScroll={true}
@@ -167,7 +153,7 @@ class Chat extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginTop: 2 * vh,
     marginBottom: 10,
     flex: 1,
   },

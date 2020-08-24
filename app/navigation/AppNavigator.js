@@ -5,23 +5,24 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {Audio} from 'expo-av';
 
 import AccountScreen from '../screens/AccountScreen';
-import TeacherHome from '../screens/TeacherHome';
-import StudentHome from '../screens/StudentHome';
-import ChatHistory from '../screens/ChatHistory';
-import {useRoute, useNavigation} from '@react-navigation/native';
-import UserContext, {UserProvider} from '../hooks/UserContext';
-import {SocketContextProvider, SocketContext} from '../hooks/SocketContext';
+import UserContext from '../hooks/UserContext';
+import {SocketContext} from '../hooks/SocketContext';
 import ChatNavigator from '../navigation/ChatNavigator';
 import HomeNavigator from '../navigation/HomeNavigator';
 import HomeButton from './HomeButton';
 import vh from '../config/vh';
 import colors from '../config/colors';
+import {navigationRef} from './rootNavigation';
+import OneSignal from 'react-native-onesignal';
 
 const Tab = createBottomTabNavigator();
 
 function AppModal({visible, setVisible, notification, user, sound}) {
-  const navigation = useNavigation();
+  const navigation = navigationRef.current;
   const {handleEvent, emit} = useContext(SocketContext);
+  if (sound && visible) {
+    sound.playAsync();
+  }
   return (
     <Modal
       animationType="slide"
@@ -78,31 +79,57 @@ function AppModal({visible, setVisible, notification, user, sound}) {
 }
 
 function AppNavigator(props) {
-  const route = useRoute();
+  const {user} = useContext(UserContext);
   [sound, setSound] = useState();
   [visible, setVisible] = useState(false);
   [notification, setNotification] = useState({
     message: '',
     studentId: '',
   });
-  const {handleEvent} = useContext(SocketContext);
+  const {handleEvent, emit} = useContext(SocketContext);
   useEffect(() => {
-    //console.log(route.params);
+    Audio.setAudioModeAsync({
+      playsInBackgroundModeIOS: true,
+      playsInBackgroundModeAndroid: true,
+    });
     loadSound();
     handleEvent('disconnect', () => {
       console.log('Disconnected');
     });
-    if (route.params.accountType === 'Teacher') {
+    if (user.accountType === 'Teacher') {
       handleEvent('notification', notificationHandler);
       handleEvent('studentAssigned', (msg) => {
         setVisible(false);
       });
+
+      OneSignal.addEventListener('opened', onOpened);
     }
   }, []);
 
+  function onOpened(openResult) {
+    const navigation = navigationRef.current;
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    notification = openResult.notification.payload.additionalData;
+    handleEvent('beginSession', (msg) => {
+      emit('goOffline', {});
+      navigation.navigate('Chats', {
+        screen: 'Chat',
+        params: {
+          receiver: msg.studentId,
+          conversationId: msg.conversationId,
+        },
+      });
+    });
+    console.log(user._id);
+    emit('beginSession', {
+      studentId: notification.studentId,
+      teacherId: user._id,
+      classId: notification.classId,
+    });
+  }
+
   function notificationHandler(msg) {
     console.log(msg.studentId);
-    sound.playAsync();
     if (!visible) {
       console.log('I am here');
       setNotification(msg);
@@ -125,7 +152,7 @@ function AppNavigator(props) {
   }
 
   return (
-    <UserProvider value={route}>
+    <>
       <Tab.Navigator
         initialRouteName="Home"
         tabBarOptions={{
@@ -150,7 +177,11 @@ function AppNavigator(props) {
           component={HomeNavigator}
           options={({navigation}) => ({
             tabBarButton: () => (
-              <HomeButton onPress={() => navigation.navigate('Home')} />
+              <HomeButton
+                onPress={() =>
+                  navigation.navigate('Home', {screen: 'Dashboard'})
+                }
+              />
             ),
           })}
         />
@@ -169,9 +200,9 @@ function AppNavigator(props) {
         sound={sound}
         setVisible={setVisible}
         notification={notification}
-        user={route.params._id}
+        user={user._id}
       />
-    </UserProvider>
+    </>
   );
 }
 

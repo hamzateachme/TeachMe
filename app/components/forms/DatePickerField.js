@@ -1,6 +1,6 @@
 import React from 'react';
 import {useFormikContext} from 'formik';
-import {View} from 'react-native';
+
 import AppDatePicker from '../AppDatePicker';
 import ErrorComponent from './ErrorComponent';
 
